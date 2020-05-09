@@ -28,4 +28,4 @@ Template applied in /Users/gasy/Developer/gasy.africa/./tetrix.scala
 
 3. Intent
 
-My goal here is to follow Eugene's teaching from start to finish with the current Scala library and versions.
+My goal here is to follow Eugene's teaching from start to finish with the current Scala library and versions. (2.13.2 as of May 2020)
