@@ -107,5 +107,5 @@ To run this on your machine,
 \$ git clone https://github.com/gasy-africa/tetrix.scala.git
 \$ cd tetrix.scala
 \$ git co day0v2 -b try/day0
-\$ sbt swing/run
+\$ sbt run
 ```
