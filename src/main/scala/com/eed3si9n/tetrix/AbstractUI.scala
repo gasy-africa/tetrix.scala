@@ -1,13 +1,15 @@
 package com.eed3si9n.tetrix
 
+import Stage._
+
 class AbstractUI {
-  private[this] val stage = new Stage((10, 20))
+  private[this] var state = newState(Block((0, 0), TKind) :: Nil)
 
   def left() {
-    stage.moveLeft()
+    state = moveLeft(state)
   }
   def right() {
-    stage.moveRight()
+    state = moveRight(state)
   }
   def up() {
   }
@@ -15,5 +17,5 @@ class AbstractUI {
   }
   def space() {
   }
-  def view: GameView = stage.view
+  def view: GameView = state.view
 }
