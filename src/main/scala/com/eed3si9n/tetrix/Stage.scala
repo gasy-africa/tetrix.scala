@@ -7,15 +7,12 @@ object Stage {
     val dummy = Piece((0, 0), TKind)
     spawn(GameState(blocks, size, dummy))
   }
+
   val moveLeft: GameState => GameState = transit { _.moveBy(-1.0, 0.0) }
   val moveRight: GameState => GameState = transit { _.moveBy(1.0, 0.0) }
+  val rotateCW: GameState => GameState = transit { _.rotateBy(-math.Pi / 2.0) }
+  val tick: GameState => GameState = transit(_.moveBy(0.0, -1.0), spawn)
 
-  private[this] def spawn(s: GameState): GameState = {
-    def dropOffPos: (Double, Double) = (s.gridSize._1 / 2.0, s.gridSize._2 - 3.0)
-    val p = Piece(dropOffPos, TKind)
-    s.copy(blocks = s.blocks ++ p.current,
-      currentPiece = p)
-  }
   private[this] def transit(trans: Piece => Piece,
                               onFail: GameState => GameState = identity): GameState => GameState =
     (s: GameState) => validate(s.copy(
@@ -23,6 +20,7 @@ object Stage {
       currentPiece = trans(s.currentPiece))) map { case x =>
       x.copy(blocks = load(x.currentPiece, x.blocks))
     } getOrElse {onFail(s)}
+
   private[this] def validate(s: GameState): Option[GameState] = {
     val size = s.gridSize
     def inBounds(pos: (Int, Int)): Boolean =
@@ -32,10 +30,20 @@ object Stage {
       (s.blocks map {_.pos} intersect currentPoss).isEmpty) Some(s)
     else None
   }
+
   private[this] def unload(p: Piece, bs: Seq[Block]): Seq[Block] = {
     val currentPoss = p.current map {_.pos}
     bs filterNot { currentPoss contains _.pos  }
   }
+
   private[this] def load(p: Piece, bs: Seq[Block]): Seq[Block] =
     bs ++ p.current
+
+  private[this] def spawn(s: GameState): GameState = {
+    def dropOffPos: (Double, Double) = (s.gridSize._1 / 2.0, s.gridSize._2 - 3.0)
+    val p = Piece(dropOffPos, TKind)
+    s.copy(blocks = s.blocks ++ p.current,
+      currentPiece = p)
+  }
+
 }
