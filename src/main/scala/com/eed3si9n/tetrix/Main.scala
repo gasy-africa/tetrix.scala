@@ -11,12 +11,21 @@ object Main extends SimpleSwingApplication {
   val bluishGray = new AWTColor(48, 99, 99)
   val bluishSilver = new AWTColor(210, 255, 255)
 
-  def onKeyPress(keyCode: Value) = keyCode match {
-    case _ => // do something
+  val ui = new AbstractUI
+
+  def onKeyPress(keyCode: Value): Unit = keyCode match {
+    case Left  => ui.left()
+    case Right => ui.right()
+    case Up    => ui.up()
+    case Down  => ui.down()
+    case Space => ui.space()
+    case _ =>
   }
+
   def onPaint(g: Graphics2D) {
-    // paint something
-  }  
+    g setColor bluishSilver
+    g drawString (ui.last, 20, 20)
+  }
 
   def top: MainFrame = new MainFrame {
     title = "tetrix"
