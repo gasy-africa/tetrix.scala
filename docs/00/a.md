@@ -4,14 +4,14 @@
 Now let's write swing.
 
 ```scala
-package com.tetrix.swing
+package com.eed3si9n.tetrix
 
 import swing._
 import event._
 
 object Main extends SimpleSwingApplication {
   import event.Key._
-  import java.awt.{Dimension, Graphics2D, Graphics, Image, Rectangle}
+  import java.awt.{Dimension, Graphics2D}
   import java.awt.{Color => AWTColor}
 
   val bluishGray = new AWTColor(48, 99, 99)
@@ -24,11 +24,11 @@ object Main extends SimpleSwingApplication {
     // paint something
   }  
 
-  def top = new MainFrame {
+  def top: MainFrame = new MainFrame {
     title = "tetrix"
     contents = mainPanel
   }
-  def mainPanel = new Panel {
+  def mainPanel: Panel = new Panel {
     preferredSize = new Dimension(700, 400)
     focusable = true
     listenTo(keys)
@@ -46,8 +46,8 @@ object Main extends SimpleSwingApplication {
 }
 ```
 
-I did glance a bit of [The scala.swing package](http://www.scala-lang.org/sites/default/files/sids/imaier/Mon,%202009-11-02,%2008:55/scala-swing-design.pdf), but I took most of the above from my first Tetrix implemention.
-scala swing implements a bunch of setter methods (`x_=`) so we can write `x = "foo"` strait in class body. It's almost refershing to see how proudly mutable this framework is, and I think it works here since UI is one big side effect anyway. 
+I will keep the same mutablily feature Eugene tried to achieve here http://eed3si9n.com/tetrix-in-scala/swing.html
+
 
 ### abstract UI
 
@@ -81,11 +81,9 @@ class AbstractUI {
 We can hook this up to the swing UI as follows:
 
 ```scala
-  import com.eed3si9n.tetrix._
-
   val ui = new AbstractUI
 
-  def onKeyPress(keyCode: Value) = keyCode match {
+  def onKeyPress(keyCode: Value): Unit = keyCode match {
     case Left  => ui.left()
     case Right => ui.right()
     case Up    => ui.up()
@@ -93,10 +91,11 @@ We can hook this up to the swing UI as follows:
     case Space => ui.space()
     case _ =>
   }
+
   def onPaint(g: Graphics2D) {
     g setColor bluishSilver
     g drawString (ui.last, 20, 20)
-  }  
+  }
 ```
 
 So now, we have an exciting game that displays `"left"` when you hit left arrow key.
