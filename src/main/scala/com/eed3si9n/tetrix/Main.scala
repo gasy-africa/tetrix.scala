@@ -1,5 +1,7 @@
 package com.eed3si9n.tetrix
 
+import javax.swing.{AbstractAction, Timer}
+
 import swing._
 import event._
 
@@ -82,6 +84,10 @@ object Main extends SimpleSwingApplication {
       g fillRect (0, 0, size.width, size.height)
       onPaint(g)
     }
+    val timer = new Timer(100, new AbstractAction() {
+      def actionPerformed(e: java.awt.event.ActionEvent) { repaint }
+    })
+    timer.start()
   }
 
 }
