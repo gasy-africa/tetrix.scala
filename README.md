@@ -31,7 +31,9 @@ Template applied in /Users/gasy/Developer/gasy.africa/./tetrix.scala
 My goal here is to follow Eugene's teaching from start to finish with the current Scala library and versions. (2.13.2 as of May 2020)
 
 
-## :x: Issues
+## :a: Journey
+
+#### Day :two:
 
 on [Day2](http://eed3si9n.com/tetrix-in-scala/day2.html) I was looking for a fix of the `leftWall1` spec test but couldn't fix the issue with the day2 documentation. I started poking around and realized that Eugene must have not slept that night because the `Stage` class went from a class to a companion object and finally a State Monad.
 
