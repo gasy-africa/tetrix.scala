@@ -13,6 +13,10 @@ case class Block(pos: (Int, Int), kind: PieceKind)
 
 case class GameView(blocks: Seq[Block], gridSize: (Int, Int), current: Seq[Block])
 
+case class GameState(blocks: Seq[Block], gridSize: (Int, Int), currentPiece: Piece) {
+  def view: GameView = GameView(blocks, gridSize, currentPiece.current)
+}
+
 case class Piece(pos: (Double, Double), kind: PieceKind, locals: Seq[(Double, Double)]) {
   def current: Seq[Block] =
     locals map { case (x, y) =>

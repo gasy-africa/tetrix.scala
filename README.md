@@ -29,3 +29,10 @@ Template applied in /Users/gasy/Developer/gasy.africa/./tetrix.scala
 3. Intent
 
 My goal here is to follow Eugene's teaching from start to finish with the current Scala library and versions. (2.13.2 as of May 2020)
+
+
+## :x: Issues
+
+on [Day2](http://eed3si9n.com/tetrix-in-scala/day2.html) I was looking for a fix of the `leftWall1` spec test but couldn't fix the issue with the day2 documentation. I started poking around and realized that Eugene must have not slept that night because the `Stage` class went from a class to a companion object and finally a State Monad.
+
+I decided to take a partial copy of the [`Stage.scala`](https://github.com/eed3si9n/tetrix.scala/blob/day2/library/src/main/scala/main/com/tetrix/Stage.scala) file produced overnight, change the `Stage` class in `AbstractUI.scala` to the new state monad, added the `GameState` case class to the `pieces.scala` file the fixed the `StageSpec.scala`. I created a `Day2` tag based on the overnight event.
