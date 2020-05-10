@@ -29,6 +29,14 @@ object Main extends SimpleSwingApplication {
   }
 
   def onPaint(g: Graphics2D) {
+    val view = ui.view
+    drawBoard(g, (0, 0), view.gridSize, view.blocks, view.current)
+    drawBoard(g, (12 * (blockSize + blockMargin), 0),
+      view.gridSize, view.next, Nil)
+  }
+
+  def drawBoard(g: Graphics2D, offset: (Int, Int), gridSize: (Int, Int),
+                blocks: Seq[Block], current: Seq[Block]) {
 
     val view = ui.view
     val (colSize: Int, rowSize: Int) = view.gridSize
