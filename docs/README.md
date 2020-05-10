@@ -22,6 +22,8 @@ Before implementing the `colision detection`, the [`Day2`](http://eed3si9n.com/t
 
 #### Day :three: 
 
+Some changes that were not refered by the documentation are added here
+
 1. in `Stage.scala`
 
 
@@ -40,7 +42,7 @@ Before implementing the `colision detection`, the [`Day2`](http://eed3si9n.com/t
   val tick: GameState => GameState = transit(_.moveBy(0.0, -1.0), Function.chain(clearFullRow :: spawn :: Nil) )
 ```
 
-1. in AbstractUI.scala
+1. in `AbstractUI.scala`
 
 ```scala
 class AbstractUI {
@@ -52,7 +54,7 @@ class AbstractUI {
 ...
 ```
 
-1. in Main.scala
+1. in `Main.scala`
 
 ```
   def onPaint(g: Graphics2D) {
@@ -69,5 +71,5 @@ class AbstractUI {
     val (colSize: Int, rowSize: Int) = view.gridSize
 ```
 
-:warning: StageSpec has changed drastically
+:warning: `StageSpec.scala` has changed drastically
 
