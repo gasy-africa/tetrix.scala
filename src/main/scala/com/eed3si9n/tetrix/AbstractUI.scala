@@ -7,7 +7,7 @@ import ExecutionContext.Implicits.global
 import scala.language.postfixOps
 
 class AbstractUI {
-    private[this] val state = Stage.newState(Block((0, 0), TKind) :: Nil,
+    private[this] val state = Stage.newState(Block((0, 0), TKind) :: Nil, (10,20),
     randomStream(new scala.util.Random))
 
   private[this] def randomStream(random: scala.util.Random): LazyList[PieceKind] =

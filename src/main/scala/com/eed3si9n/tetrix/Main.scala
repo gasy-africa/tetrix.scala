@@ -45,7 +45,11 @@ object Main extends SimpleSwingApplication {
     // TODO: Blocking Code
 //    Thread.sleep(100)
 //    for (view <- uiView)
-         drawBoard(g, (0, 0), view.gridSize, view.blocks, view.current)
+//         drawBoard(g, (0, 0), view.gridSize, view.blocks, view.current)
+      {
+        drawBoard(g, (0, 0), (10, 20), view.blocks, view.current)
+        drawBoard(g, (12 * (blockSize + blockMargin), 0), view.miniGridSize, view.next, Nil)
+      }
 
     view.status match {
       case GameOver =>
@@ -61,11 +65,12 @@ object Main extends SimpleSwingApplication {
                 blocks: Seq[Block], current: Seq[Block]) {
 
     val (colSize: Int, rowSize: Int) = gridSize
+    val (colOffset: Int, rowOffset: Int) = offset
 
     def buildRect(pos: (Int, Int)): Rectangle = {
       val (col: Int, row: Int) = pos
-      new Rectangle(col * (blockSize + blockMargin),
-        (rowSize - row - 1) * (blockSize + blockMargin),
+      new Rectangle(colOffset + col * (blockSize + blockMargin),
+        rowOffset + (rowSize - row - 1) * (blockSize + blockMargin),
         blockSize, blockSize)
     }
 
@@ -73,19 +78,21 @@ object Main extends SimpleSwingApplication {
       g setColor bluishLighterGray
       for {
         x <- 0 until colSize
-        y <- 0 to rowSize - 2
+        y <- 0 until rowSize
         pos = (x, y)
       } g draw buildRect(pos)
     }
 
     def drawBlocks() {
       g setColor bluishEvenLighter
-      blocks foreach { b => g fill buildRect(b.pos) }
+      blocks filter {_.pos._2 < rowSize} foreach { b =>
+        g fill buildRect(b.pos) }
     }
 
     def drawCurrent() {
       g setColor bluishSilver
-      current foreach { b => g fill buildRect(b.pos) }
+      current filter {_.pos._2 < rowSize}  foreach { b =>
+        g fill buildRect(b.pos) }
     }
 
     drawEmptyGrid()

@@ -2,8 +2,8 @@ package com.eed3si9n.tetrix
 
 object Stage {
 
-  def newState(blocks: Seq[Block], kinds: Seq[PieceKind]): GameState = {
-    val size = (10, 20)
+  def newState(blocks: Seq[Block], gridSize: (Int, Int) = (10, 20), kinds: Seq[PieceKind]): GameState = {
+    val size = gridSize
     val dummy = Piece((0, 0), TKind)
     val withNext = spawn(GameState(Nil, size, dummy, dummy, kinds, ActiveStatus)).
       copy(blocks = blocks)
