@@ -42,7 +42,7 @@ Some changes that are not refered by the documentation are added here
   val tick: GameState => GameState = transit(_.moveBy(0.0, -1.0), Function.chain(clearFullRow :: spawn :: Nil) )
 ```
 
-1. in `AbstractUI.scala`
+2. in `AbstractUI.scala`
 
 ```scala
 class AbstractUI {
@@ -54,7 +54,7 @@ class AbstractUI {
 ...
 ```
 
-1. in `Main.scala`
+3. in `Main.scala`
 
 ```scala
   def onPaint(g: Graphics2D) {
