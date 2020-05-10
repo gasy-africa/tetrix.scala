@@ -5,6 +5,10 @@ import javax.swing.{AbstractAction, Timer}
 import swing._
 import event._
 
+import scala.concurrent.Future
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+
 object Main extends SimpleSwingApplication {
   import event.Key._
   import java.awt.{Dimension, Graphics2D}
@@ -29,17 +33,34 @@ object Main extends SimpleSwingApplication {
   }
 
   def onPaint(g: Graphics2D) {
-    val view = ui.view
-    drawBoard(g, (0, 0), view.gridSize, view.blocks, view.current)
-    drawBoard(g, (12 * (blockSize + blockMargin), 0),
-      view.gridSize, view.next, Nil)
+
+    val uiView: Future[GameView] = ui.view
+
+    // TODO: Blocking Code
+    import scala.language.postfixOps
+    import scala.concurrent.duration._
+    import akka.util.Timeout
+    val view = Await.result(uiView, Timeout(1 second).duration)
+
+    // TODO: Blocking Code
+//    Thread.sleep(100)
+//    for (view <- uiView)
+         drawBoard(g, (0, 0), view.gridSize, view.blocks, view.current)
+
+    view.status match {
+      case GameOver =>
+        g setColor bluishSilver
+        g drawString ("game over",
+          12 * (blockSize + blockMargin), 7 * (blockSize + blockMargin))
+      case _ => // do nothing
+    }
+
   }
 
   def drawBoard(g: Graphics2D, offset: (Int, Int), gridSize: (Int, Int),
                 blocks: Seq[Block], current: Seq[Block]) {
 
-    val view = ui.view
-    val (colSize: Int, rowSize: Int) = view.gridSize
+    val (colSize: Int, rowSize: Int) = gridSize
 
     def buildRect(pos: (Int, Int)): Rectangle = {
       val (col: Int, row: Int) = pos
@@ -59,12 +80,12 @@ object Main extends SimpleSwingApplication {
 
     def drawBlocks() {
       g setColor bluishEvenLighter
-      view.blocks foreach { b => g fill buildRect(b.pos) }
+      blocks foreach { b => g fill buildRect(b.pos) }
     }
 
     def drawCurrent() {
       g setColor bluishSilver
-      view.current foreach { b => g fill buildRect(b.pos) }
+      current foreach { b => g fill buildRect(b.pos) }
     }
 
     drawEmptyGrid()

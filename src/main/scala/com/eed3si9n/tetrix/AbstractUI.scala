@@ -1,20 +1,13 @@
 package com.eed3si9n.tetrix
 
 import akka.actor._
-import akka.pattern.{ask,pipe}
 import scala.concurrent.duration._
-import akka.util.Timeout
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import scala.language.postfixOps
 
-// TODO: Blocking Code
-import scala.concurrent.Await
-
 class AbstractUI {
-  implicit val timeout: Timeout = Timeout(1 second)
-
-  private[this] val state = Stage.newState(Block((0, 0), TKind) :: Nil,
+    private[this] val state = Stage.newState(Block((0, 0), TKind) :: Nil,
     randomStream(new scala.util.Random))
 
   private[this] def randomStream(random: scala.util.Random): LazyList[PieceKind] =
@@ -37,9 +30,11 @@ class AbstractUI {
 
   def space(): Unit = { playerActor ! Drop }
 
-  // TODO: Blocking Code
-  def view: GameView = {
-    Await.result((playerActor ? View).mapTo[GameView], timeout.duration)
+  def view: Future[GameView] = {
+    import akka.util.Timeout
+    import akka.pattern.ask
+    implicit val timeout: Timeout = Timeout(1 second)
+    (playerActor ? View).mapTo[GameView]
   }
 
 }

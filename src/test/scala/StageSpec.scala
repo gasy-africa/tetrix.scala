@@ -24,12 +24,14 @@ class StageSpec extends Specification { def is = s2"""
 
   Dropping the current piece should
     tick the piece until it hits something.                                   $drop1
+
+  Spawning a new piece should
+    end the game it hits something.                                           $spawn1
                                                                               """
   import com.eed3si9n.tetrix._
   import Stage._
 
-  val ttt: Seq[PieceKind] = TKind :: TKind :: TKind :: Nil
-
+  val ttt: Seq[PieceKind] = Nil padTo (20, TKind)
   val s1: GameState = newState(Block((0, 0), TKind) :: Nil, ttt)
   def left1 =
     moveLeft(s1).blocks map {_.pos} must contain(exactly(
@@ -65,7 +67,7 @@ class StageSpec extends Specification { def is = s2"""
       (4, 18), (5, 18), (6, 18), (5, 19)
     )).inOrder
 
-  val s3 = newState(Seq(
+  val s3: GameState = newState(Seq(
     (0, 0), (1, 0), (2, 0), (3, 0), (7, 0), (8, 0), (9, 0))
     map { Block(_, TKind) }, ttt)
   def tick3 =
@@ -86,4 +88,7 @@ class StageSpec extends Specification { def is = s2"""
       (0, 0), (4, 0), (5, 0), (6, 0), (5, 1),
       (4, 18), (5, 18), (6, 18), (5, 19)
     )).inOrder
+
+  def spawn1 =
+    Function.chain(Nil padTo (10, drop))(s1).status must_== GameOver
 }
