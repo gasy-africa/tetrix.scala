@@ -4,16 +4,18 @@ import scala.annotation.tailrec
 
 object Stage {
 
-  def newState(blocks: Seq[Block]): GameState = {
+  def newState(blocks: Seq[Block], kinds: Seq[PieceKind]): GameState = {
     val size = (10, 20)
     val dummy = Piece((0, 0), TKind)
-    spawn(GameState(blocks, size, dummy))
+    val withNext = spawn(GameState(Nil, size, dummy, dummy, kinds)).copy(blocks = blocks)
+    spawn(withNext)
   }
 
   val moveLeft: GameState => GameState = transit { _.moveBy(-1.0, 0.0) }
   val moveRight: GameState => GameState = transit { _.moveBy(1.0, 0.0) }
   val rotateCW: GameState => GameState = transit { _.rotateBy(-math.Pi / 2.0) }
-  val tick: GameState => GameState = transit(_.moveBy(0.0, -1.0), Function.chain(clearFullRow :: spawn _ :: Nil) )
+  val tick: GameState => GameState = transit(_.moveBy(0.0, -1.0), Function.chain(clearFullRow :: spawn :: Nil) )
+  val drop: GameState => GameState = (s0: GameState) => Function.chain((Nil padTo (s0.gridSize._2, transit {_.moveBy(0.0, -1.0)})) ++ List(tick))(s0)
 
   private[this] def transit(trans: Piece => Piece,
                               onFail: GameState => GameState = identity): GameState => GameState =
@@ -41,12 +43,14 @@ object Stage {
   private[this] def load(p: Piece, bs: Seq[Block]): Seq[Block] =
     bs ++ p.current
 
-  private[this] def spawn(s: GameState): GameState = {
-    def dropOffPos: (Double, Double) = (s.gridSize._1 / 2.0, s.gridSize._2 - 3.0)
-    val p = Piece(dropOffPos, TKind)
-    s.copy(blocks = s.blocks ++ p.current,
-      currentPiece = p)
-  }
+  private[this] lazy val spawn: GameState => GameState =
+    (s: GameState) => {
+      def dropOffPos: (Double, Double) = (s.gridSize._1 / 2.0, s.gridSize._2 - 2.0)
+      val next = Piece((2, 1), s.kinds.head)
+      val p = s.nextPiece.copy(pos = dropOffPos)
+      s.copy(blocks = s.blocks ++ p.current,
+        currentPiece = p, nextPiece = next, kinds = s.kinds.tail)
+    }
 
   private[this] lazy val clearFullRow: GameState => GameState =
     (s0: GameState) => {
