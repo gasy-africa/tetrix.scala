@@ -1,37 +1,45 @@
 package com.eed3si9n.tetrix
 
-import Stage._
-import java.{util => ju}
+import akka.actor._
+import akka.pattern.{ask,pipe}
+import scala.concurrent.duration._
+import akka.util.Timeout
+import scala.concurrent._
+import ExecutionContext.Implicits.global
+import scala.language.postfixOps
+
+// TODO: Blocking Code
+import scala.concurrent.Await
 
 class AbstractUI {
+  implicit val timeout: Timeout = Timeout(1 second)
 
-  private[this] var state = newState(Block((0, 0), TKind) :: Nil,
-    randomStream(new util.Random))
+  private[this] val state = Stage.newState(Block((0, 0), TKind) :: Nil,
+    randomStream(new scala.util.Random))
 
-  private[this] def randomStream(random: util.Random): LazyList[PieceKind] =
+  private[this] def randomStream(random: scala.util.Random): LazyList[PieceKind] =
     PieceKind(random.nextInt % 7) #:: randomStream(random)
 
-  private[this] def updateState(trans: GameState => GameState) {
-    synchronized {
-      state = trans(state)
-    }
+  private[this] val system = ActorSystem("TetrixSystem")
+
+  private[this] val playerActor = system.actorOf(Props(new StageActor(state)), name = "playerActor")
+
+  private[this] val timer = system.scheduler.scheduleWithFixedDelay(
+    0 millisecond, 1000 millisecond, playerActor, Tick)
+
+  def left(): Unit = { playerActor ! MoveLeft }
+
+  def right(): Unit = { playerActor ! MoveRight }
+
+  def up(): Unit = { playerActor ! RotateCW }
+
+  def down(): Unit = { playerActor ! Tick }
+
+  def space(): Unit = { playerActor ! Drop }
+
+  // TODO: Blocking Code
+  def view: GameView = {
+    Await.result((playerActor ? View).mapTo[GameView], timeout.duration)
   }
-
-  private[this] val timer = new ju.Timer
-  timer.scheduleAtFixedRate(new ju.TimerTask {
-    def run() { updateState { tick } }
-  }, 0, 1000)
-
-  def left(): Unit = updateState{ moveLeft }
-
-  def right(): Unit = updateState { moveRight }
-
-  def up(): Unit = updateState { rotateCW }
-
-  def down(): Unit = updateState { tick }
-
-  def space(): Unit = updateState { drop }
-
-  def view: GameView = state.view
 
 }
