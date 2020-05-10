@@ -56,7 +56,7 @@ class AbstractUI {
 
 1. in `Main.scala`
 
-```
+```scala
   def onPaint(g: Graphics2D) {
     val view = ui.view
     drawBoard(g, (0, 0), view.gridSize, view.blocks, view.current)
