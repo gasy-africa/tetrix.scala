@@ -73,3 +73,8 @@ class AbstractUI {
 
 :warning: `StageSpec.scala` has changed drastically
 
+#### Day :four:
+
+https://www.reactivesystems.eu/2019/02/19/dont-use-awaitresult.html
+
+
