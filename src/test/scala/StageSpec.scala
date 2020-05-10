@@ -32,7 +32,7 @@ class StageSpec extends Specification { def is = s2"""
   import Stage._
 
   val ttt: Seq[PieceKind] = Nil padTo (20, TKind)
-  val s1: GameState = newState(Block((0, 0), TKind) :: Nil, ttt)
+  val s1: GameState = newState(Block((0, 0), TKind) :: Nil, (10, 20), ttt)
   def left1 =
     moveLeft(s1).blocks map {_.pos} must contain(exactly(
       (0, 0), (3, 18), (4, 18), (5, 18), (4, 19)
@@ -51,7 +51,7 @@ class StageSpec extends Specification { def is = s2"""
     rotateCW(s1).blocks map {_.pos} must contain(exactly(
       (0, 0), (5, 19), (5, 18), (5, 17), (6, 18)
     )).inOrder
-  val s2 = newState(Block((3, 18), TKind) :: Nil, ttt)
+  val s2: GameState = newState(Block((3, 18), TKind) :: Nil, (10, 20), ttt)
   def leftHit1 =
     moveLeft(s2).blocks map {_.pos} must contain(exactly(
       (3, 18), (4, 18), (5, 18), (6, 18), (5, 19)
@@ -69,14 +69,14 @@ class StageSpec extends Specification { def is = s2"""
 
   val s3: GameState = newState(Seq(
     (0, 0), (1, 0), (2, 0), (3, 0), (7, 0), (8, 0), (9, 0))
-    map { Block(_, TKind) }, ttt)
+    map { Block(_, TKind) }, (10, 20), ttt)
   def tick3 =
     Function.chain(Nil padTo (19, tick))(s3).
       blocks map {_.pos} must contain(exactly(
       (5, 0), (4, 18), (5, 18), (6, 18), (5, 19)
     )).inOrder
 
-  val s4 = newState(Nil, OKind :: OKind :: Nil)
+  val s4: GameState = newState(Nil, (10, 20), OKind :: OKind :: Nil)
   def init1 =
     (s4.currentPiece.kind must_== OKind) and
       (s4.blocks map {_.pos} must contain(exactly(
