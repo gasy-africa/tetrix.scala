@@ -36,7 +36,7 @@ Some changes that are not refered by the documentation are added here
   }
 ```
 
-`Function.chain` is now chaining two funtions of the same type `clearFullRow` and `spawn` take the `GameStae` State Monad as parameter
+`Function.chain` is now chaining two funtions of the same type `clearFullRow` and `spawn` take the `GameState` State Monad as parameter
 
 ```scala
   val tick: GameState => GameState = transit(_.moveBy(0.0, -1.0), Function.chain(clearFullRow :: spawn :: Nil) )
