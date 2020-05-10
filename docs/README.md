@@ -22,7 +22,7 @@ Before implementing the `colision detection`, the [`Day2`](http://eed3si9n.com/t
 
 #### Day :three: 
 
-Some changes that were not refered by the documentation are added here
+Some changes that are not refered by the documentation are added here
 
 1. in `Stage.scala`
 
