@@ -12,12 +12,14 @@ case object ZKind extends PieceKind
 case class Block(pos: (Int, Int), kind: PieceKind)
 
 case class GameView(blocks: Seq[Block], gridSize: (Int, Int),
-                    current: Seq[Block], next: Seq[Block])
+                    current: Seq[Block], miniGridSize: (Int, Int), next: Seq[Block],
+                    status: GameStatus)
 
 case class GameState(blocks: Seq[Block], gridSize: (Int, Int),
-                     currentPiece: Piece, nextPiece: Piece, kinds: Seq[PieceKind]) {
+                     currentPiece: Piece, nextPiece: Piece, kinds: Seq[PieceKind],
+                     status: GameStatus) {
   def view: GameView = GameView(blocks, gridSize,
-    currentPiece.current, nextPiece.current)
+    currentPiece.current, (4, 4), nextPiece.current, status)
 }
 
 case class Piece(pos: (Double, Double), kind: PieceKind, locals: Seq[(Double, Double)]) {
@@ -60,3 +62,7 @@ case object PieceKind {
     case _ => ZKind
   }
 }
+
+sealed trait GameStatus
+case object ActiveStatus extends GameStatus
+case object GameOver extends GameStatus

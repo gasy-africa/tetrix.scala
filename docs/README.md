@@ -75,6 +75,80 @@ class AbstractUI {
 
 #### Day :four:
 
+
+:round_pushpin: Akka
+
 https://www.reactivesystems.eu/2019/02/19/dont-use-awaitresult.html
 
+I moved the `Await.result` blocking code from `AbstractUI` class below 
 
+```
+  def view: Future[GameView] = {
+    import akka.util.Timeout
+    import akka.pattern.ask
+    implicit val timeout: Timeout = Timeout(1 second)
+    (playerActor ? View).mapTo[GameView]
+  }
+```
+
+to the `Main.scala` UI code and left the UI taking care of the blocking code 
+
+```
+  def onPaint(g: Graphics2D) {
+
+    val uiView: Future[GameView] = ui.view
+
+    // TODO: Blocking Code
+    import scala.language.postfixOps
+    import scala.concurrent.duration._
+    import akka.util.Timeout
+    val view = Await.result(uiView, Timeout(1 second).duration)
+
+    // TODO: Blocking Code
+//    Thread.sleep(100)
+//    for (view <- uiView)
+         drawBoard(g, (0, 0), view.gridSize, view.blocks, view.current)
+
+  }
+```
+
+:round_pushpin: Game Status
+
+
+```
+case class GameView(blocks: Seq[Block], gridSize: (Int, Int),
+  current: Seq[Block], miniGridSize: (Int, Int), next: Seq[Block],
+  status: GameStatus)
+```
+
+```
+case class GameState(blocks: Seq[Block], gridSize: (Int, Int),
+    currentPiece: Piece, nextPiece: Piece, kinds: Seq[PieceKind],
+    status: GameStatus) {
+  def view: GameView = GameView(blocks, gridSize,
+    currentPiece.current, (4, 4), nextPiece.current, status)
+}
+```
+
+Add `ActiveStatus` when creating the State Monad in `Stage.scala`
+
+```
+  def newState(blocks: Seq[Block], kinds: Seq[PieceKind]): GameState = {
+    val size = (10, 20)
+    val dummy = Piece((0, 0), TKind)
+    val withNext = spawn(GameState(Nil, size, dummy, dummy, kinds, ActiveStatus)).
+      copy(blocks = blocks)
+    spawn(withNext)
+  }
+
+```
+
+Tests:
+
+when adding the last `spawn1` test ttt needs to be changed changed
+
+```
+  val ttt: Seq[PieceKind] = Nil padTo (20, TKind)
+```
+
+I added a `package object` in the `com.eed3si9n.tetrix` to declare a state Monad `type State[A] = A => A`
