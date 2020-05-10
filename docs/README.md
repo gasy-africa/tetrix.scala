@@ -22,7 +22,7 @@ Before implementing the `colision detection`, the [`Day2`](http://eed3si9n.com/t
 
 #### Day :three: 
 
-:one: in `Stage.scala`
+1. in `Stage.scala`
 
 
 ```scala
@@ -40,7 +40,7 @@ Before implementing the `colision detection`, the [`Day2`](http://eed3si9n.com/t
   val tick: GameState => GameState = transit(_.moveBy(0.0, -1.0), Function.chain(clearFullRow :: spawn :: Nil) )
 ```
 
-:two: in AbstractUI.scala
+1. in AbstractUI.scala
 
 ```scala
 class AbstractUI {
@@ -52,7 +52,7 @@ class AbstractUI {
 ...
 ```
 
-:three: in Main.scala
+1. in Main.scala
 
 ```
   def onPaint(g: Graphics2D) {
