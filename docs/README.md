@@ -145,7 +145,7 @@ Add `ActiveStatus` when creating the State Monad in `Stage.scala`
 
 Tests:
 
-when adding the last `spawn1` test ttt needs to be changed changed
+when adding the last `spawn1` test ttt needs to be changed
 
 ```
   val ttt: Seq[PieceKind] = Nil padTo (20, TKind)
