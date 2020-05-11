@@ -112,7 +112,7 @@ to the `Main.scala` UI code and left the UI taking care of the blocking code
   }
 ```
 
-:round_pushpin: Game Status
+:round_pushpin: Game Status nees to be added to the `GameView` and `GameState` case classes
 
 
 ```
@@ -143,7 +143,7 @@ Add `ActiveStatus` when creating the State Monad in `Stage.scala`
 
 ```
 
-Tests:
+:bulb: Tests:
 
 when adding the last `spawn1` test ttt needs to be changed
 
