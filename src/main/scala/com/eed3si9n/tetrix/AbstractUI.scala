@@ -37,4 +37,13 @@ class AbstractUI {
     (playerActor ? View).mapTo[GameView]
   }
 
+  private[this] val stateActor = system.actorOf(Props(new StateActor(state)), name = "stateActor")
+
+  private[this] val agentActor = system.actorOf(Props(new AgentActor(playerActor)), name = "agentActor")
+
+  private[this] val masterActor = system.actorOf(Props(new GameMasterActor(stateActor, agentActor)), name = "masterActor")
+
+  private[this] val masterTickTimer = system.scheduler.scheduleWithFixedDelay(
+    0 millisecond, 700 millisecond, masterActor, Tick)
+
 }
