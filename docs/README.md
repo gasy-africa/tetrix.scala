@@ -172,3 +172,37 @@ trait StateExample {
   def gameOverState: GameState = Function.chain(Nil padTo (10, drop))(s1)
 }
 ```
+
+## Day :seven:
+
+Along with the `Day7` explanation, I changed the `Agent.scala` filename to `agents.scala` and added an `import` and a `minUtility` variable, as below:
+
+```scala
+class Agent {
+
+  import Stage._
+
+  private[this] val minUtility = -1000.0
+
+...
+```
+
+I added `StateActor` along with its `StateMessage` ADT which was refered by the `GameMasterActor`
+
+```scala
+sealed trait StateMessage
+case object GetState extends StateMessage
+case class SetState(s: GameState) extends StateMessage
+case object GetView extends StateMessage
+
+class StateActor(s0: GameState) extends Actor {
+  private[this] var state: GameState = s0
+
+  def receive = {
+    case GetState    => sender ! state
+    case SetState(s) => state = s
+    case GetView     => sender ! state.view
+  }
+}
+```
+
