@@ -27,8 +27,8 @@ class AgentSpec extends Specification with StateExample { def is =            s2
     val s = Function.chain(Nil padTo (19, tick))(s3)
     agent.utility(s) must_== 1.0
   }
-  def solver1 =
+  def solver1: MatchResult[Any] =
     agent.bestMove(s1) must_== MoveLeft
-  def solver2 =
+  def solver2: MatchResult[Any] =
     agent.bestMove(s3) must_== Drop
 }
