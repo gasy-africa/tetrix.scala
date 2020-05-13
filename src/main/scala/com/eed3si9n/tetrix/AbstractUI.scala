@@ -31,10 +31,8 @@ class AbstractUI {
   def space(): Unit = { playerActor ! Drop }
 
   def view: Future[GameView] = {
-    import akka.util.Timeout
     import akka.pattern.ask
-    implicit val timeout: Timeout = Timeout(1 second)
-    (playerActor ? View).mapTo[GameView]
+    (playerActor ? View)(1 second).mapTo[GameView]
   }
 
   private[this] val stateActor = system.actorOf(Props(new StateActor(state)), name = "stateActor")

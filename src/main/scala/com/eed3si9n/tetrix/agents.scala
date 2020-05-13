@@ -4,23 +4,21 @@ class Agent {
 
   import Stage._
 
-  private[this] val minUtility = -1000.0
+  private[this] val minUtility: Double = -1000.0
 
   def utility(state: GameState): Double =
     if (state.status == GameOver) -1000.0
     else state.lineCount.toDouble
 
   def bestMove(s0: GameState): StageMessage = {
-    var retval: StageMessage = MoveLeft
-    var current: Double = minUtility
-    possibleMoves foreach { move =>
-      val u = utility(toTrans(move)(s0))
-      if (u > current) {
-        current = u
-        retval = move
-      } // if
-    }
-    retval
+    case class Move(move: StageMessage, min: Double)
+    possibleMoves.foldLeft(Move(MoveLeft, minUtility)){ (move, _) =>
+      val u = utility(toTrans(move.move)(s0))
+      if (u > move.min) {
+        Move(move.move, u)
+      } else
+        move
+    }.move
   }
 
   private[this] val possibleMoves: Seq[StageMessage] =
