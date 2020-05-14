@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorRef}
 import scala.concurrent.duration._
 import scala.concurrent._
 import scala.language.postfixOps
+import ExecutionContext.Implicits.global
 import akka.pattern.ask
 
 sealed trait StageMessage
@@ -54,6 +55,7 @@ class GameMasterActor(stateActor: ActorRef, agentActor: ActorRef) extends Actor 
   }
   private[this] def getState: GameState = {
     val future = (stateActor ? GetState)(1 second).mapTo[GameState]
+    // TODO: Blocking Code
     Await.result(future, 1 second)
   }
 }

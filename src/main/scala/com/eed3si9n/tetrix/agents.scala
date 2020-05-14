@@ -6,7 +6,8 @@ class Agent {
   import Stage._
   import scala.annotation.tailrec
 
-  private[this] val minUtility = -1000.0
+  private[this] val minUtility: Double = -1000.0
+
   def utility(state: GameState): Double =
     if (state.status == GameOver) minUtility
     else reward(state) - penalty(state) / 10.0
@@ -50,6 +51,16 @@ class Agent {
       r <- rotationSeqs
       t <- translationSeqs
     } yield r ++ t
+/*
+    case class Move(move: StageMessage, min: Double)
+    possibleMoves.foldLeft(Move(MoveLeft, minUtility)){ (move, _) =>
+      val u = utility(toTrans(move.move)(s0))
+      if (u > move.min) {
+        Move(move.move, u)
+      } else
+        move
+    }.move
+*/
   }
   private[this] def toTrans(message: StageMessage): GameState => GameState =
     message match {
