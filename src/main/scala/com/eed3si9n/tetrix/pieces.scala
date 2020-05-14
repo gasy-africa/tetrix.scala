@@ -18,8 +18,15 @@ case class GameView(blocks: Seq[Block], gridSize: (Int, Int),
 case class GameState(blocks: Seq[Block], gridSize: (Int, Int),
                      currentPiece: Piece, nextPiece: Piece, kinds: Seq[PieceKind],
                      status: GameStatus, lineCount: Int) {
+
   def view: GameView = GameView(blocks, gridSize,
     currentPiece.current, (4, 4), nextPiece.current, status, lineCount)
+
+  def unload(p: Piece): GameState = {
+    val currentPoss = p.current map {_.pos}
+    this.copy(blocks = blocks filterNot { currentPoss contains _.pos })
+  }
+
 }
 
 case class Piece(pos: (Double, Double), kind: PieceKind, locals: Seq[(Double, Double)]) {

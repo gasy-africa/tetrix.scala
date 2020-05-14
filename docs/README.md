@@ -205,4 +205,15 @@ class StateActor(s0: GameState) extends Actor {
   }
 }
 ```
+### Day :eight: buggy-penalty
 
+Adding `unload` function
+
+Class `GameState` is missing `unload()` function in explanations when refering to `penalty` function
+
+```scala
+  def unload(p: Piece): GameState = {
+    val currentPoss = p.current map {_.pos}
+    this.copy(blocks = blocks filterNot { currentPoss contains _.pos })
+  }
+```
